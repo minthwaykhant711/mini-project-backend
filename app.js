@@ -18,3 +18,25 @@ app.get('/password/:pass', (req, res) => {
         res.send(hash);
     });
 });
+
+app.post('/login', (req, res) => {
+   const { username, password } = req.body;
+
+
+   con.query("SELECT id, password FROM users WHERE username = ?", [username], (err, results) => {
+       if(err) return res.status(500).json({ error: "Database error" });
+       if(results.length !== 1) return res.status(401).json({ error: "Wrong username" });
+
+
+       const user = results[0];
+       bcrypt.compare(password, user.password, (err, same) => {
+           if(err) return res.status(500).json({ error: "Hashing error" });
+           if(!same) return res.status(401).json({ error: "Wrong password" });
+
+
+           res.json({ id: user.id, username, message: "Login OK" });
+       });
+   });
+});
+
+
