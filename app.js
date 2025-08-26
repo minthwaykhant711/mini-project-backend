@@ -23,7 +23,7 @@ app.get('/password/:pass', (req, res) => {
 // ---------- Add Expense ----------
 app.post('/expenses', (req, res) => {
    const { userId, item, paid } = req.body;
-   const sql = "INSERT INTO expense (user_id, item, paid, date) VALUES (?, ?, ?, NOW())";
+   const sql = "INSERT INTO expenses (user_id, item, paid, date) VALUES (?, ?, ?, NOW())";
    const params = [userId, item, paid];
 
 
