@@ -20,6 +20,20 @@ app.get('/password/:pass', (req, res) => {
 });
 
 
+// ---------- Delete Expense ----------
+app.delete('/expenses/:id', (req, res) => {
+   const { id } = req.params;
+   const { userId } = req.query;
+
+
+   con.query("DELETE FROM expenses WHERE id = ? AND user_id = ?", [id, userId], (err, result) => {
+       if (err) return res.status(500).send("Database error");
+       if (result.affectedRows === 0) return res.status(404).send("Expense not found or not owned by user");
+       res.status(200).send("Expense deleted successfully");
+   });
+});
+
+
 // ---------- Add Expense ----------
 app.post('/expenses', (req, res) => {
    const { userId, item, paid } = req.body;
@@ -92,5 +106,6 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running at ' + PORT);
 });
+
 
 
