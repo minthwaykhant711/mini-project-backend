@@ -19,6 +19,7 @@ app.get('/password/:pass', (req, res) => {
     });
 });
 
+
 // ---------- Add Expense ----------
 app.post('/expenses', (req, res) => {
    const { userId, item, paid } = req.body;
@@ -34,4 +35,37 @@ app.post('/expenses', (req, res) => {
        res.status(201).send("Expense added successfully");
    });
 });
+
+
+
+app.post('/login', (req, res) => {
+   const { username, password } = req.body;
+
+
+   con.query("SELECT id, password FROM users WHERE username = ?", [username], (err, results) => {
+       if(err) return res.status(500).json({ error: "Database error" });
+       if(results.length !== 1) return res.status(401).json({ error: "Wrong username" });
+
+
+       const user = results[0];
+       bcrypt.compare(password, user.password, (err, same) => {
+           if(err) return res.status(500).json({ error: "Hashing error" });
+           if(!same) return res.status(401).json({ error: "Wrong password" });
+
+
+           res.json({ id: user.id, username, message: "Login OK" });
+       });
+   });
+});
+
+
+
+
+
+// ---------- Server starts here ---------
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log('Server is running at ' + PORT);
+});
+
 
