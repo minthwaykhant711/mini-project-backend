@@ -19,6 +19,7 @@ app.get('/password/:pass', (req, res) => {
     });
 });
 
+
 app.post('/login', (req, res) => {
    const { username, password } = req.body;
 
@@ -39,4 +40,14 @@ app.post('/login', (req, res) => {
    });
 });
 
+
+=======
+
+
+
+// ---------- Server starts here ---------
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log('Server is running at ' + PORT);
+});
 
