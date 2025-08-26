@@ -20,6 +20,24 @@ app.get('/password/:pass', (req, res) => {
 });
 
 
+// ---------- Add Expense ----------
+app.post('/expenses', (req, res) => {
+   const { userId, item, paid } = req.body;
+   const sql = "INSERT INTO expenses (user_id, item, paid, date) VALUES (?, ?, ?, NOW())";
+   const params = [userId, item, paid];
+
+
+   con.query(sql, params, (err, result) => {
+       if (err) {
+           console.error(err);
+           return res.status(500).send("Database server error");
+       }
+       res.status(201).send("Expense added successfully");
+   });
+});
+
+
+
 app.post('/login', (req, res) => {
    const { username, password } = req.body;
 
@@ -39,6 +57,7 @@ app.post('/login', (req, res) => {
        });
    });
 });
+
 
 
 app.get('/expenses', (req, res) => {
@@ -67,9 +86,11 @@ app.get('/expenses', (req, res) => {
 
 
 
+
 // ---------- Server starts here ---------
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log('Server is running at ' + PORT);
 });
+
 
