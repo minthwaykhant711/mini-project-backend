@@ -60,6 +60,31 @@ app.post('/login', (req, res) => {
 
 
 
+app.get('/expenses', (req, res) => {
+   const { userId, date, keyword } = req.query;
+
+
+   let sql = "SELECT * FROM expenses WHERE user_id = ?";
+   let params = [userId];
+
+
+   if (date) {
+       sql += " AND DATE(date) = ?";
+       params.push(date);
+   }
+   if (keyword) {
+       sql += " AND item LIKE ?";
+       params.push(`%${keyword}%`);
+   }
+
+
+   con.query(sql, params, (err, results) => {
+       if (err) return res.status(500).send("Database error");
+       res.json(results);
+   });
+});
+
+
 
 
 // ---------- Server starts here ---------
